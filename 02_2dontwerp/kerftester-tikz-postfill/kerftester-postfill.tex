@@ -1,0 +1,48 @@
+\documentclass[tikz,margin=5mm]{standalone}
+%\usetikzlibrary{...}% tikz package already loaded by 'tikz' option
+
+% settings for laser cutting
+\tikzset{every path/.style={line width=0.035mm, draw=red,text=black}}
+\usepackage[outline]{contour}
+
+\newcommand{\tikzlinewidth}{0.035mm}
+
+\contourlength{\tikzlinewidth}
+\newcommand{\textcontour}[1]{\contour{red}{\textcolor{white}{#1}}}
+
+
+\usepackage{xfp} % for higher precision floating point math
+
+% sans serif font
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{helvet}
+
+\begin{document}
+
+\newcommand{\n}{10}         % number of cuts
+\newcommand{\base}{0.26}    % smallest cut
+\newcommand{\spacing}{1.2}  % space between the cuts
+\newcommand{\kerf}{0.005}   % kerf increment
+
+\begin{tikzpicture}
+
+    \draw[line width=2*\tikzlinewidth,postaction={white,fill}]
+    (0,0) rectangle ++(\fpeval{\spacing*(\n+1)},1)
+    (0,0.9) rectangle ++(\spacing,1.1)
+
+    \foreach \i in {0,1,...,\numexpr\n-1} {
+        (\fpeval{\spacing + \base + \i*\spacing+\i*\kerf},0.9) rectangle ++(\fpeval{\spacing-\base-\i*\kerf},1.1) 
+    }
+
+    \foreach \i in {0,1,...,\numexpr\n-1} {
+		(\fpeval{\spacing/2 + \i*\spacing},-1.8) rectangle ++(1,1.5)
+        (\fpeval{\spacing + \i*\spacing -0.2},-1) rectangle ++(0.2,1.2)     
+    };
+
+    \foreach \i in {0,1,...,\numexpr\n-1} {
+        \node at (\fpeval{\base/2+(1+\i)*\spacing+\i*\kerf/2},0.65) {\textbf{\fpeval{round(100*(10*(\base+\i*\kerf)))/100}}}; 
+    }
+	
+\end{tikzpicture}
+
+\end{document}
