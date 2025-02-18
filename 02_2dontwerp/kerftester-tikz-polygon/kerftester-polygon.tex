@@ -2,12 +2,9 @@
 
 
 % settings for laser cutting
-\tikzset{every path/.style={line width=0.035mm, draw=red,text=black}}
+\tikzset{every path/.style={line width=0.035mm, draw=blue,text=black}}
 \usepackage[outline]{contour}
-
-\newcommand{\tikzlinewidth}{0.035mm}
-
-\contourlength{\tikzlinewidth}
+\contourlength{0.035mm}
 \newcommand{\textcontour}[1]{\contour{red}{\textcolor{white}{#1}}}
 
 
@@ -109,7 +106,7 @@
 
     % annotate the cuts
     \foreach \i in {0,1,...,\numexpr\n-1} {
-        \node at (\fpeval{\base/2+(1+\i)*\spacing+\i*\kerf/2},0.65) {\textbf{\fpeval{round(100*(10*(\base+\i*\kerf)))/100}}}; 
+        \node at (\fpeval{\base/2+(1+\i)*\spacing+\i*\kerf/2},0.65) {\textcontour{\textbf{\fpeval{round(100*(10*(\base+\i*\kerf)))/100}}}}; 
     }
 
 \end{tikzpicture}
