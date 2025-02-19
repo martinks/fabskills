@@ -1,0 +1,114 @@
+\documentclass[tikz,margin=1mm]{standalone}
+
+
+% settings for laser cutting
+\tikzset{every path/.style={line width=0.035mm, draw=red,text=black}}
+\usepackage[outline]{contour}
+\contourlength{0.035mm}
+\newcommand{\textcontour}[1]{\contour{red}{\textcolor{white}{#1}}}
+
+
+\usepackage{xfp} % for higher precision floating point math
+
+% sans serif font
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{helvet}
+
+\begin{document}
+
+\newcommand{\n}{10}         % number of cuts
+\newcommand{\base}{0.25}    % smallest cut
+\newcommand{\spacing}{1.2}  % space between the cuts
+\newcommand{\kerf}{0.005}   % kerf increment
+
+
+
+\newcommand{\aaa}{2}        
+\newcommand{\bbb}{1}  
+\newcommand{\ccc}{-0.3}
+\newcommand{\ddd}{-1.8}
+\newcommand{\eee}{1}
+\newcommand{\fff}{0.2}
+
+
+
+\begin{tikzpicture}
+
+    \def\points{}
+
+    \xdef\points{\points (0,\aaa) --}  
+
+    % the cuts of varying width
+    \foreach \i in {0,1,...,\numexpr\n-1} {
+        \pgfmathsetmacro\x{(1+\i)*\spacing}  
+        \pgfmathsetmacro\y{\aaa}   
+        \xdef\points{\points (\x,\y) --}     
+        \pgfmathsetmacro\x{(1+\i)*\spacing}  
+        \pgfmathsetmacro\y{\bbb}  
+        \xdef\points{\points (\x,\y) --}  
+        \pgfmathsetmacro\x{(1+\i)*\spacing+\base+\i*\kerf}  
+        \pgfmathsetmacro\y{\bbb}  
+        \xdef\points{\points (\x,\y) --}  
+        \pgfmathsetmacro\x{(1+\i)*\spacing+\base+\i*\kerf}  
+        \pgfmathsetmacro\y{\aaa}  
+        \xdef\points{\points (\x,\y) --}  
+    }
+
+    \pgfmathsetmacro\x{(\n+1)*\spacing}  
+    \pgfmathsetmacro\y{\aaa}  
+    \xdef\points{\points (\x,\y) --}  
+
+    \pgfmathsetmacro\x{(\n+1)*\spacing}  
+    \pgfmathsetmacro\y{0}  
+    \xdef\points{\points (\x,\y) --}  
+
+    % the pieces for the kerf measurement
+    \foreach \i in {\numexpr\n-1,\numexpr\n-2,...,0} {
+
+        \pgfmathsetmacro\x{(1+\i)*\spacing}  
+        \pgfmathsetmacro\y{0}   
+        \xdef\points{\points (\x,\y) --}  
+
+        \pgfmathsetmacro\x{(1+\i)*\spacing}  
+        \pgfmathsetmacro\y{\ccc}   
+        \xdef\points{\points (\x,\y) --}  
+
+        \pgfmathsetmacro\x{(1+\i)*\spacing + (\eee-\fff)/2}  
+        \pgfmathsetmacro\y{\ccc}   
+        \xdef\points{\points (\x,\y) --}  
+
+        \pgfmathsetmacro\x{(1+\i)*\spacing + (\eee-\fff)/2}  
+        \pgfmathsetmacro\y{\ddd}   
+        \xdef\points{\points (\x,\y) --}  
+
+        \pgfmathsetmacro\x{(1+\i)*\spacing + (\eee-\fff)/2-\eee}  
+        \pgfmathsetmacro\y{\ddd}   
+        \xdef\points{\points (\x,\y) --}
+
+        \pgfmathsetmacro\x{(1+\i)*\spacing + (\eee-\fff)/2-\eee}  
+        \pgfmathsetmacro\y{\ccc}   
+        \xdef\points{\points (\x,\y) --}
+
+        \pgfmathsetmacro\x{(1+\i)*\spacing -\fff}  
+        \pgfmathsetmacro\y{\ccc}   
+        \xdef\points{\points (\x,\y) --}
+
+        \pgfmathsetmacro\x{(1+\i)*\spacing -\fff}  
+        \pgfmathsetmacro\y{0}   
+        \xdef\points{\points (\x,\y) --}
+    }
+
+    \xdef\points{\points (0,0)}  
+
+
+    % draw!
+    \draw[] \points -- cycle;
+
+    % annotate the cuts
+    \foreach \i in {0,1,...,\numexpr\n-1} {
+        \node at (\fpeval{\base/2+(1+\i)*\spacing+\i*\kerf/2},0.65) {\textbf{\fpeval{round(100*(10*(\base+\i*\kerf)))/100}}}; 
+    }
+
+\end{tikzpicture}
+
+\end{document}
