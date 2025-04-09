@@ -12,7 +12,7 @@ icsep = 0.2; // separation between inner and outer column
 icl = ocl-2*icsep;  // outer length
 icw = ocw-2*icsep;  // outer width
 icd = 1.5;   // wall thickness
-ich = 35;    // height
+ich = 30;    // height
 icg = 1;     // vertical gap
 
 module roundedcube(size = [1, 1, 1], center = false, radius = 0.5, apply_to = "all") {

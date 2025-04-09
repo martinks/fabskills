@@ -17,7 +17,7 @@ icsep = 0.2; // separation between inner and outer column
 icl = ocl-2*icsep;  // outer length
 icw = ocw-2*icsep;  // outer width
 icd = 1.5;   // wall thickness
-ich = 35;    // height
+ich = 30;    // height
 icg = 1;     // vertical gap
 
 // supports
@@ -45,16 +45,14 @@ cr = 32.5;
 ch = 25;
 cd = ocd;
 
-// cone
-cch = 100;
+// connection top-bottom
+overlap = 5;
 
 
 eps = 0.01;
 $fn = 200;
 
-//projection(cut = true)
-//rotate([90,90,0]) // side view
-//translate([0,0,-50])
+
 
 module hc_column(length, cell_size, wall_thickness) {
         no_of_cells = floor(length / (cell_size + wall_thickness)) ;
@@ -102,17 +100,9 @@ module support(spl,spw,sph,bh) {
     }
 }
 
-
-module cube_to_cylinder(width,depth,height,radius) {
-    hull(){
-        translate([-width/2,-depth/2,0])
-        cube([width,depth,eps]);
-        translate([0,0,height-eps])
-        cylinder(h = eps, r = radius);
-    }
-}
-
-
+//projection(cut = true)
+//rotate([90,90,0]) // side view
+//translate([0,0,-50])
 
 intersection() {
   
@@ -158,13 +148,10 @@ union() {
     }
     
     // outer column
-    translate([0,0,bh+sph/2-eps])
+    translate([0,0,bh+sph/2+overlap/2-eps])
     difference() {
-        cube([ocl+2*ocd,ocw+2*ocd,sph],center=true);
-        cube([ocl,ocw,sph+eps],center=true);
-        // remove cone
-        translate([0,0,och/2-cch/2])
-        cylinder(h=cch+eps,r1=0,r2=cr,center=true);
+        cube([ocl+2*ocd,ocw+2*ocd,sph+overlap],center=true);
+        cube([ocl,ocw,sph+overlap+eps],center=true);
         
         // slit
         translate([0,0,-(och-sh)/2]) { 
@@ -227,23 +214,7 @@ union() {
         support(spl,spw,sph,bh);
         translate([-ocd-ocl/2,ocd+ocw/2,0])
         support(spl,spw,sph,bh);
-    }
-    // cylinder
-    translate([0,0,ch/2+bh+och])
-    difference() {
-        cylinder(h=ch+eps,r=cr+cd,center=true);
-        cylinder(h=ch+2*eps,r=cr,center=true);
-    }
-    
-   translate([0,0,bh+sph-eps/2])
-    difference() {
-        cube_to_cylinder(ocl+2*ocd,ocw+2*ocd,och-sph+eps,cr+ocd);
-        translate([0,0,-eps/2])
-        cube_to_cylinder(ocl,ocw,och-sph+2*eps,cr);
-    }
-   
-
-    
+    } 
  
 }
 }
