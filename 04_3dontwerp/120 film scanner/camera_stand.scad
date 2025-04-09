@@ -172,6 +172,8 @@ union() {
         }
         
         // slide holes
+        
+        translate([ocw/3,0,0])
         hull(){
             translate([0,ocw/2+ocd/2,-sph/2+shro+shg])
             rotate([90,0,0])
@@ -180,7 +182,8 @@ union() {
             rotate([90,0,0])
             cylinder(h=ocd+eps,r1=shro,r2=shri,center=true);
         }
-                
+        
+        translate([ocw/3,0,0])        
         hull(){
             translate([0,-ocw/2-ocd/2,-sph/2+shro+shg])
             rotate([90,0,0])
@@ -188,7 +191,29 @@ union() {
             translate([0,-ocw/2-ocd/2,-sph/2+shro+shg+shdh])
             rotate([90,0,0])
             cylinder(h=ocd+eps,r1=shri,r2=shro,center=true);
-        }       
+        }  
+       
+        translate([-ocw/3,0,0])
+        hull(){
+            translate([0,ocw/2+ocd/2,-sph/2+shro+shg])
+            rotate([90,0,0])
+            cylinder(h=ocd+eps,r1=shro,r2=shri,center=true);
+            translate([0,ocw/2+ocd/2,-sph/2+shro+shg+shdh])
+            rotate([90,0,0])
+            cylinder(h=ocd+eps,r1=shro,r2=shri,center=true);
+        }
+        
+        translate([-ocw/3,0,0])  
+        hull(){
+            translate([0,-ocw/2-ocd/2,-sph/2+shro+shg])
+            rotate([90,0,0])
+            cylinder(h=ocd+eps,r1=shri,r2=shro,center=true);
+            translate([0,-ocw/2-ocd/2,-sph/2+shro+shg+shdh])
+            rotate([90,0,0])
+            cylinder(h=ocd+eps,r1=shri,r2=shro,center=true);
+        }  
+   
+        
     }
     
     // support
